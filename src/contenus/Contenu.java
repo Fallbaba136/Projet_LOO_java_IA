@@ -11,4 +11,13 @@ public abstract class Contenu {
 
     // Methodes 
     public abstract double tauxInfestation();
+
+    @Override
+    /**
+     * Surcharge de de notre methode toString
+     * @return 
+     */
+    public String toString(){
+        return String.format("%s %.1f", this.nom, tauxInfestation());
+    }
 }

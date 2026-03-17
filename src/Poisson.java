@@ -99,7 +99,11 @@ public class Poisson {
         getPoids(),
         getTaille());
     }
-
+    /**
+     * Class pour tester les differentes attributs du poissson 
+     * @auteur Fall Babacar
+     * @param args
+     */
     public static void main(String[] args) {
         Poisson newPoisson = new Poisson("cissePoisson", "sardine", 10, 20, 174);
         

@@ -7,7 +7,6 @@ public class DataChargeRead {
 public static void main(String[] args) {
 
     
-
 ArrayList<String> releves = new ArrayList<>();
 
 try {
