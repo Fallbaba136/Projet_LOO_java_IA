@@ -18,6 +18,8 @@ public abstract class Contenu {
      * @return 
      */
     public String toString(){
-        return String.format("%s %.1f", this.nom, tauxInfestation());
+        return String.format("%s taux d'infestaton est de : %.1f ", this.nom, tauxInfestation());
     }
+
+
 }

@@ -2,8 +2,8 @@ package contenus;
 
 public class LAV extends Contenu{
     private double tauxInfestation;
-    public LAV(String nom, double tauxInfestation){
-        super(nom);
+    public LAV(double tauxInfestation){
+        super("LAV");
         this.tauxInfestation = tauxInfestation;
     }
    
@@ -11,5 +11,4 @@ public class LAV extends Contenu{
     public double tauxInfestation(){
         return tauxInfestation;
     }
-
 }

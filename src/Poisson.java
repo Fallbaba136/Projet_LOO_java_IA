@@ -70,6 +70,9 @@ public class Poisson {
      */
     public void setTaille(double taille){this.taille = taille;}
 
+
+    public void setListContenu(Contenu contenu){this.maContenu.add(contenu);}
+
     /**
      * le constructeur
      * @param especes
@@ -99,16 +102,5 @@ public class Poisson {
         getPoids(),
         getTaille());
     }
-    /**
-     * Class pour tester les differentes attributs du poissson 
-     * @auteur Fall Babacar
-     * @param args
-     */
-    public static void main(String[] args) {
-        Poisson newPoisson = new Poisson("cissePoisson", "sardine", 10, 20, 174);
-        
-        System.out.println("\n" + newPoisson);
-    }
-
 
 }

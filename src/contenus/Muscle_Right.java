@@ -2,8 +2,8 @@ package contenus;
 
 public class Muscle_Right extends Contenu{
     private double tauxInfestation;
-    public Muscle_Right(String nom, double tauxInfestation){
-        super(nom);
+    public Muscle_Right(double tauxInfestation){
+        super("Muscle_Right");
         this.tauxInfestation = tauxInfestation;
     }
    
@@ -11,5 +11,4 @@ public class Muscle_Right extends Contenu{
     public double tauxInfestation(){
         return tauxInfestation;
     }
-
 }

@@ -2,8 +2,8 @@ package contenus;
 
 public class Liver extends Contenu{
     private double tauxInfestation;
-    public Liver(String nom, double tauxInfestation){
-        super(nom);
+    public Liver(double tauxInfestation){
+        super("Liver");
         this.tauxInfestation = tauxInfestation;
     }
    
