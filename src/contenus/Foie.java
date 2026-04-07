@@ -1,5 +1,7 @@
 package contenus;
 
+import exception.ContenuException;
+
 public class Foie extends Contenu{
     private double tauxInfestation;
     
@@ -7,8 +9,11 @@ public class Foie extends Contenu{
      * Le Constructeur
      * @param tauxInfestation
      */
-    public Foie(double tauxInfestation){
+    public Foie(double tauxInfestation) throws ContenuException{
         super("Foie");
+        if (tauxInfestation < 0) {
+            throw new ContenuException("Le taux d'infestation ne peux pas être négatifs");
+        }
         this.tauxInfestation = tauxInfestation;
     }
    
@@ -20,10 +25,17 @@ public class Foie extends Contenu{
     public double tauxInfestation(){
         return tauxInfestation;
     }
+    /**
+     * @param
+     */
 
     public static void main(String[] args) {
-        Contenu foie = new Foie(10);
-        System.out.println(foie + "%");
+        try {
+            Contenu foie = new Foie(10);
+            System.out.println(foie + "%");
+        } catch (ContenuException e) {
+            System.out.println(e);
+        }
     }
 
 }

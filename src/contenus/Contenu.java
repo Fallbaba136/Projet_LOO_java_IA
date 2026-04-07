@@ -1,11 +1,20 @@
 package contenus;
+
+import exception.ContenuException;
+
+/**
+ * @author Fall
+ */
 public abstract class Contenu {
     //Attributs
 
     private String nom;
 
-   
-    public Contenu(String nom){
+   /**
+    * @param nom
+    */
+    public Contenu(String nom) throws ContenuException{
+        if (this.nom == null || this.nom.trim().isEmpty()) throw new ContenuException("Le nom ne du contenu ne peut pas être null ou vide");
         this.nom = nom;
     }
 
