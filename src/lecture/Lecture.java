@@ -10,8 +10,8 @@ package lecture;
 import java.io.*;
 import java.util.ArrayList;
 
-import exception.LectureException;
 
+import exception.LectureException;
 /****
  * cette classe a pour but de lire les données d'un fichier CSV
  * et de les stocker dans une liste d'objets Data_A
@@ -80,6 +80,7 @@ public class Lecture{
         while ((ligne = br.readLine()) != null) {
             cpt++;
             if (cpt != 1) { // ignorer l'en-tête
+            if (ligne.trim().isEmpty()) continue;
                 try {
                     //  Séparateur tabulation
                     String[] parts = ligne.split("\t");
@@ -89,9 +90,9 @@ public class Lecture{
                     //  Gestion valeurs manquantes + virgule → point
                     Double masse = parseDouble(parts[1]); 
                     int lt      = Integer.parseInt(parts[2].trim()); 
-                    int lf      = Integer.parseInt(parts[3].trim());
+                    int lf      = Integer.parseInt(parts[3].trim()); 
                     Double masseEv = parseDouble(parts[4]);
-                    int filet   = Integer.parseInt(parts[5].trim());
+                    Double filet   = parseDouble(parts[5].trim()); //
 
                     //  Ignorer les valeurs aberrantes (négatives)
                     if (masse != null && masse < 0) masse = null;
@@ -100,7 +101,6 @@ public class Lecture{
                     data.add(new Data_A(id, masse, lt, lf, masseEv, filet));
 
                 } catch (Exception e) { 
-                    System.out.println("Ligne ignorée : " + ligne); // On ignore la ligne si 
                     System.out.println("Erreur : " + e.getMessage()); //
                 }
             }
@@ -130,7 +130,7 @@ private Double parseDouble(String val) {
             lecture.readData_A(); //
             System.out.println();
             for (Data_A d : lecture.getData()) { 
-                System.out.println(d);
+                System.out.println(d + "\n");
             }
         } catch (LectureException e) {
             System.out.println("Erreur : " + e.getMessage());

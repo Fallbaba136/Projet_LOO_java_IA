@@ -3,12 +3,14 @@ package contenus;
 import exception.ContenuException;
 
 /**
+ * Classe représentant les LAV d'un poisson, qui est un type de contenu.
  * @author Fall
  */
 public class Muscle_Right extends Contenu{
     private double tauxInfestation;
 
     /**
+     * Constructeur de la classe Muscle_Right.
      * @param tauxInfestation
      */
     public Muscle_Right(double tauxInfestation) throws ContenuException{
@@ -17,6 +19,7 @@ public class Muscle_Right extends Contenu{
         this.tauxInfestation = tauxInfestation;
     }
    /**
+    * Return le taux d'infestation du muscle droite 
     * @return
     */
     @Override

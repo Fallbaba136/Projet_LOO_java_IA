@@ -3,6 +3,7 @@ package contenus;
 import exception.ContenuException;
 
 /**
+ * Classe représentant les LAV d'un poisson, qui est un type de contenu.
  * @author Fall
  */
 public class Muscle_Left extends Contenu{
@@ -17,6 +18,7 @@ public class Muscle_Left extends Contenu{
         this.tauxInfestation = tauxInfestation;
     }
    /**
+    * return le taux d'infestation du muscle gauche
     * @return
     */
     @Override

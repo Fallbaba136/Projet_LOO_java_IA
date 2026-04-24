@@ -20,9 +20,46 @@ public class Data_A {
     private int lt;                // LT(mm) - Longueur totale
     private int lf;                // LF(mm) - Longueur à la fourche
     private Double masseEvisceree; // Masse Poissons evisceree(g)
-    private int filet;             // Filet
+    private double filet;             // Filet
+
+    public String getId() {
+        return id;
+    }
+
+    public Double getMasse() {
+        return masse;
+    }
+
+    public int getLt() {
+        return lt;
+    }
+
+    public int getLf() {
+        return lf;
+    }
+
+    public Double getMasseEvisceree() {
+        return masseEvisceree;
+    }
+
+    public double getFilet() {
+        return filet;
+    }
+
+     public void setMasse(Double masse) {
+        this.masse = masse;
+    }
+    
+    public void setMasseEvisceree(Double masseEvisceree) {
+        this.masseEvisceree = masseEvisceree;
+    }
+    
+    public void setFilet(double filet) {
+        this.filet = filet;
+    }
 
     /**
+     * Constructeur
      * @param id
      * @param masse
      * @param lt
@@ -31,7 +68,7 @@ public class Data_A {
      * @param filet
      */
 
-    public Data_A(String id, Double masse, int lt, int lf, Double masseEvisceree, int filet) {
+    public Data_A(String id, Double masse, int lt, int lf, Double masseEvisceree, Double filet) {
         this.id = id;
         this.masse = masse;
         this.lt = lt;
@@ -42,7 +79,7 @@ public class Data_A {
 
     @Override
     public String toString() {
-        return String.format("id:%s masse:%.2fg LT:%dmm LF:%dmm masseEv:%.2fg filet:%d",
+        return String.format("id:%s masse:%.2fg LT:%dmm LF:%dmm masseEv:%.2fg filet:%f",
             this.id, this.masse, this.lt, this.lf, this.masseEvisceree, this.filet);
     }
 }

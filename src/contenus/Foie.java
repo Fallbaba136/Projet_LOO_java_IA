@@ -1,7 +1,10 @@
 package contenus;
 
 import exception.ContenuException;
-
+/**
+ * Classe représentant le foie d'un poisson, qui est un type de contenu.
+ * @author Fall
+ */
 public class Foie extends Contenu{
     private double tauxInfestation;
     
@@ -20,6 +23,7 @@ public class Foie extends Contenu{
     @Override
     /**
      * Surcharge du taux d'infestation
+     * return le taux d'infestation du Foie
      * @return
      */
     public double tauxInfestation(){

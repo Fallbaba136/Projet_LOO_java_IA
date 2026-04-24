@@ -3,6 +3,7 @@ package contenus;
 import exception.ContenuException;
 
 /**
+ * Classe abstraite représentant le contenu d'un poisson.
  * @author Fall
  */
 public abstract class Contenu {
@@ -18,7 +19,10 @@ public abstract class Contenu {
         this.nom = nom;
     }
 
-    // Methodes 
+    /**
+     * methode qui sera herite par les classes filles
+     * @return
+     */
     public abstract double tauxInfestation();
 
     @Override

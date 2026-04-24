@@ -3,6 +3,7 @@ package contenus;
 import exception.ContenuException;
 
 /**
+ * Classe représentant les gonades d'un poisson, qui est un type de contenu.
  * @author Fall
  */
 public class Gonads extends Contenu{
@@ -18,6 +19,7 @@ public class Gonads extends Contenu{
   
     @Override
     /**
+     * return le taux d'infestation du gonads
      * @return
      */
     public double tauxInfestation(){

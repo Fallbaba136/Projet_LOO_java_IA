@@ -3,6 +3,7 @@ package contenus;
 import exception.ContenuException;
 
 /**
+ * Classe représentant les LAV d'un poisson, qui est un type de contenu.
  * @author Fall
  */
 public class LAV extends Contenu{
@@ -18,6 +19,7 @@ public class LAV extends Contenu{
     }
    
     /**
+     * return le taux d'infestation du LAV
      * @return
      */
     @Override

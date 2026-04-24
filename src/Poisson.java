@@ -27,9 +27,9 @@ public class Poisson {
      */
     private double poids;
     /**
-     * taille du poisson
+     * longueur du poisson
      */
-    private double taille;
+    private double longueur;
     /**
      * tauxInfestation du poisson
      * idbre de parasite chez un poisson
@@ -76,23 +76,22 @@ public class Poisson {
      * Gestion Exception 
      * @param poids
      */
-    public void setPoids(double poids) throws PoissonException{
-        if (this.poids <= 0) throw new PoissonException("Le poids du poisson ne peut pas être inférieur ou égal à 0");
+    public void setPoids(double poids){
         this.poids = poids;}
 
     /**
-     * lecture de taille
+     * lecture de longueur
      * @return
      */
-    public double getTaille(){return taille;}
+    public double getLongueur(){return longueur;}
     /**
-     * Modification de taille 
+     * Modification de longueur 
      * Gestion d'erreur avec Exception
-     * @param taille
+     * @param longueur
      */
-    public void setTaille(double taille) throws PoissonException{
-        if(this.taille <= 0) throw new PoissonException("La taille du poisson doit être inférieur ou égal à 0");
-        this.taille = taille;}
+    public void setLongueur(double longueur) throws PoissonException{
+        if(this.longueur < 0) throw new PoissonException("La longueur du poisson doit être supérieur ou égal à 0");
+        this.longueur = longueur;}
 
     /**
      * return la liste de tout les organes (contenus) du poisson 
@@ -117,17 +116,14 @@ public class Poisson {
      * @param id
      * @param longueur
      * @param poids
-     * @param taille
+     * @param longueur
      * 
      * On vérifie que les données ne peuvent être négatif 
      */
     
-    public Poisson(String id, String especes, double poids, double taille) throws PoissonException{
+    public Poisson(String id) throws PoissonException{
     
         this.id = id;
-        this.especes = especes;
-        this.poids =  poids;
-        this.taille =  taille;
         maContenu   = new ArrayList<>();
     }
 
@@ -150,18 +146,18 @@ public class Poisson {
      * Surcharge de la méthode toString
      */
     public String toString(){
-        return String.format("[%s] Espece: %s Poids(g): %.1f Taille(cm): %.1f \n",
+        return String.format("[%s] Espece: %s Poids(g): %.1f longueur(cm): %.1f \n",
         getId(),
         getEspece(),
         getPoids(),
-        getTaille());
+        getLongueur());
     }
     /**
      * @param args
      */
     public static void main(String[] args) {
         try {
-            Poisson newPoisson = new Poisson("cissePoisson", "sardine",  20, 174);
+            Poisson newPoisson = new Poisson("cissePoisson");
             System.out.println(newPoisson + "\n");
         } catch (PoissonException e) {
             System.out.println(e);

@@ -12,7 +12,7 @@ import exception.PopulationException;
  * on calcule des statistiques pour analyser l'infestation parasitaire.
  * 
  * Les statistiques calculées sont :
- * - Taille moyenne : taille moyenne des poissons du groupe
+ * - longueur moyenne : longueur moyenne des poissons du groupe
  * - Prévalence : pourcentage de poissons infectés
  * - Abondance : nombre moyen de parasites par poisson (tous poissons confondus)
  * - Intensité : nombre moyen de parasites chez les poissons infectés uniquement
@@ -28,9 +28,9 @@ public class Population {
  
     //Attributs
     /**
-     * Taille du poisson
+     * longueur du poisson
      */
-    private double taille;
+    private double longueur;
     /**
      * Pourcentage de poisson infectée dans un groupe
      */
@@ -53,7 +53,7 @@ public class Population {
     //Constructeurs
 /**
  * Constructeur qui crée une population à partir d'une liste de poissons.
- * Les statistiques (taille moyenne, prévalence, abondance, intensité)
+ * Les statistiques (longueur moyenne, prévalence, abondance, intensité)
  * sont automatiquement calculées à partir des données.
  * 
  * @param poissons La liste des poissons qui composent la population
@@ -64,10 +64,11 @@ public Population(List<Poisson> poissons) throws PopulationException {
     }
     // Stocke la liste des poissons
     this.maPoissons = poissons;
+    this.completionDonnees();
 
     
     // Calcule les statistiques à partir des données
-    this.taille = calculerTailleMoyenne();      // taille moyenne du groupe
+    this.longueur = calculerlongueurMoyenne();      // longueur moyenne du groupe
     this.prevalence = calculerPrevalence();     // pourcentage de poissons infectés
     this.abondance = calculerAbondance();       // parasites par poisson (tous)
     this.intensite = calculerIntensite();       // parasites par poisson infecté
@@ -76,10 +77,10 @@ public Population(List<Poisson> poissons) throws PopulationException {
     // Accesseur
 
     /**
-     * accessibilite de l'attributs tailles
+     * accessibilite de l'attributs longueurs
      * @return
      */
-    public double getTaille(){return taille;}
+    public double getLongueur(){return longueur;}
     
     /**
      * accessibilite de l'attributs prevalence
@@ -124,21 +125,21 @@ public Population(List<Poisson> poissons) throws PopulationException {
     }
 
     /**
-    * Calcule la taille moyenne des poissons dans la population.
+    * Calcule la longueur moyenne des poissons dans la population.
     * Étapes du calcul :
     * 1. Parcourir tous les poissons de la liste
-    * 2. Additionner leurs tailles
+    * 2. Additionner leurs longueurs
     * 3. Diviser la somme par le nombre total de poissons
     * 
-    * @return la taille moyenne des poissons (en mm)
+    * @return la longueur moyenne des poissons (en mm)
     */
 
-    private double calculerTailleMoyenne() {    
+    private double calculerlongueurMoyenne() {    
         double somme = 0;
         //On parcours le tableau de poisson
         for (Poisson p : maPoissons) {
-            //on recupere la taille et on fait la somme de leur taille
-        somme += p.getTaille();  // ou getLongueur()
+            //on recupere la longueur et on fait la somme de leur longueur
+        somme += p.getLongueur();  // ou getLongueur()
     }
     // on divise la somme par le nombre total de poisson pour avoir la moyenne 
          return somme / maPoissons.size();
@@ -194,39 +195,65 @@ public Population(List<Poisson> poissons) throws PopulationException {
         return (double) totalParasites / nbInfectes;
     }
 
-    /**
-    * Calcule la moyenne des taux d'infestation pour une espèce donnée
-    * en ignorant les poissons dont le taux d'infestation est manquant (null).
-    * Cette méthode est utilisée pour la complétion des données manquantes 
-    * en remplaçant les valeurs null par la moyenne de l'espèce correspondante.
-    * @param espece le nom de l'espèce pour laquelle calculer la moyenne
-    * @return la moyenne des taux connus de cette espèce
-    */
-    private double calculerMoyenneParEspece(String espece) {
-        double somme = 0;
-        int compteur = 0;
-        for (Poisson p : maPoissons) {
-            if (p.getEspece().equals(espece) && p.getTauxInfestation() != null) {
-            somme += p.getTauxInfestation();
-            compteur++;
-            }
-        }
-        return compteur == 0 ? 0 : somme / compteur;
-    }
-
    /**
+    * @author FALL Babacar
     * Nettoie les données en remplaçant les valeurs manquantes (null)
     * par la moyenne de l'espèce correspondante.
     * (Niveau 1 du sujet)
     */
     public void completionDonnees() {
         for (Poisson p : maPoissons) {
-            if (p.getTauxInfestation() == null) {
-            double moyenne = calculerMoyenneParEspece(p.getEspece());
+            if (p.getTauxInfestation() == null || p.getTauxInfestation() < 0) {
+            double moyenne = calculerAbondance();
             p.setTauxInfestation(moyenne);
             }
         }
     }
+
+    /**
+     * @author Soulayeman Diallo
+     * @version 1.0
+     * Effectue une régression linéaire pour prédire le taux d'infestation
+     * en fonction de la longueur des poissons.
+     * (Niveau 2 du sujet)
+     */        
+public  void Regression(){
+       int nb=0; //le nombre poisson d'ont connais le taux d'infestation
+
+        double sumX = 0;
+        double sumY = 0;
+        double sumXY = 0;
+        double sumX2 = 0;
+
+        for(Poisson p:maPoissons){
+
+          if(p.getTauxInfestation()!=null){
+            sumX+=p.getLongueur();//la somme des tailles 
+            sumY+=p.getTauxInfestation(); //somme des taux 
+            sumXY+=p.getLongueur()*p.getTauxInfestation(); //somme des x*y
+            sumX2+=p.getLongueur()+p.getLongueur();//somme des x^2
+            nb++;
+          }
+
+        }
+
+        double a=(nb * sumXY - sumX * sumY) / (nb * sumX2 - sumX * sumX);
+        double b = (sumY - a * sumX) / nb;
+
+        //maintenant qu'on connait a et b , on vas prédire le taux d'infestation des poisssons d'ont celui-ci etait inconnue
+        //predir
+        for(Poisson p: maPoissons){
+
+            if(p.getTauxInfestation()!=null){
+
+                double x = p.getLongueur();
+                double y = a*x+b;
+                p.setTauxInfestation(y);
+            }
+        }
+        
+    }
+
 
     
 
@@ -238,8 +265,8 @@ public Population(List<Poisson> poissons) throws PopulationException {
 
     @Override
         public String toString() {
-        return String.format("taille(mm) : %.1f | prevalence : %.1f | abondance : %d | intensite : %.1f",
-         getTaille(),
+        return String.format("longueur(mm) : %.1f | prevalence : %.1f | abondance : %d | intensite : %.1f",
+         getLongueur(),
          getPrevalence(),
          getAbondance(),
          getIntensite()
@@ -253,10 +280,10 @@ public Population(List<Poisson> poissons) throws PopulationException {
         List<Poisson> poissons = new ArrayList<>();
 
         try {
-            Poisson p1 = new Poisson("Merlu1", "Merlu", 500, 300);
-            Poisson p2 = new Poisson("Merlu2", "Merlu", 550, 320);
-            Poisson p3 = new Poisson("Merlu3", "Merlu", 450, 280);
-            Poisson p4 = new Poisson("Merlu4", "Merlu", 520, 310);
+            Poisson p1 = new Poisson("Merlu1");
+            Poisson p2 = new Poisson("Merlu2");
+            Poisson p3 = new Poisson("Merlu3");
+            Poisson p4 = new Poisson("Merlu4");
 
             p1.setTauxInfestation(10.0);
             p2.setTauxInfestation(25.0);

@@ -3,6 +3,7 @@ package contenus;
 import exception.ContenuException;
 
 /**
+ * Classe représentant le foie d'un poisson, qui est un type de contenu.
  * @author Fall
  */
 public class Liver extends Contenu{
@@ -18,6 +19,7 @@ public class Liver extends Contenu{
     }
    
     /**
+     * return le tauc d'infestation du liver
      * @return
      */
     @Override

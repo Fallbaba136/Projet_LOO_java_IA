@@ -1,80 +1,143 @@
 /*
-public class Data_A {
-    private String id;
-    private Double masse;          // Masse(g)
-    private int lt;                // LT(mm) - Longueur totale
-    private int lf;                // LF(mm) - Longueur à la fourche
-    private Double masseEvisceree; // Masse Poissons evisceree(g)
-    private int filet;             // Filet
+import java.util.ArrayList;
+import java.util.List;
+import lecture.Data_B;
+import lecture.Lecture2;
+import exception.LectureException;
+import exception.PoissonException;
+import exception.PopulationException;
 
-    public Data_A(String id, Double masse, int lt, int lf, Double masseEvisceree, int filet) {
-        this.id = id;
-        this.masse = masse;
-        this.lt = lt;
-        this.lf = lf;
-        this.masseEvisceree = masseEvisceree;
-        this.filet = filet;
+public class Application {
+    private List<Poisson> poissons;
+    private ArrayList<Data_B> data;
+    private Population population;
+
+    public void initData(String name) throws PoissonException, LectureException, PopulationException {
+        // 1. Lecture du nouveau fichier CSV
+        Lecture2 lect = new Lecture2(name);
+        lect.readData_B();
+        this.data = lect.getData();
+        
+        // 2. Complétion Niveau 1 : Données manquantes du CSV (Abdomen, Foie, etc.)
+        completDonneesManquantesCSV();
+        
+        // 3. Création des objets Poisson
+        poissons = new ArrayList<>();
+        for (Data_B d : data) {
+            Poisson p = new Poisson(String.valueOf(d.getId()));
+            p.setEspece(d.getEspeces());
+            p.setLongueur(d.getLt());
+            
+            // Le total = nombre de parasites = tauxInfestation
+            if (d.getTotal() != null && d.getTotal() >= 0) {
+                p.setTauxInfestation(d.getTotal().doubleValue());
+            } else {
+                p.setTauxInfestation(null); // Sera complété par Population
+            }
+            
+            poissons.add(p);
+        }
+        
+        // 4. Complétion Niveau 2 : Population va compléter les tauxInfestation manquants
+        //    en utilisant d'abord la moyenne, puis la régression linéaire
+        this.population = new Population(poissons);
     }
-
-    @Override
-    public String toString() {
-        return String.format("id:%s masse:%.2fg LT:%dmm LF:%dmm masseEv:%.2fg filet:%d",
-            this.id, this.masse, this.lt, this.lf, this.masseEvisceree, this.filet);
-    }
-}
-
-
-
-
-*/
-
-
-/*
-public void readData_A() {
-    int cpt = 0;
-
-    try (BufferedReader br = new BufferedReader(new FileReader(this.filename))) {
-        String ligne;
-
-        while ((ligne = br.readLine()) != null) {
-            cpt++;
-            if (cpt != 1) { // ignorer l'en-tête
-                try {
-                    //  Séparateur tabulation
-                    String[] parts = ligne.split("\t");
-
-                    String id = parts[0].trim(); //  Trim pour éviter les espaces
-
-                    //  Gestion valeurs manquantes + virgule → point
-                    Double masse = parseDouble(parts[1]);
-                    int lt      = Integer.parseInt(parts[2].trim()); 
-                    int lf      = Integer.parseInt(parts[3].trim());
-                    Double masseEv = parseDouble(parts[4]);
-                    int filet   = Integer.parseInt(parts[5].trim());
-
-                    //  Ignorer les valeurs aberrantes (négatives)
-                    if (masse != null && masse < 0) masse = null;
-                    if (masseEv != null && masseEv < 0) masseEv = null;
-
-                    data.add(new Data_A(id, masse, lt, lf, masseEv, filet));
-
-                } catch (Exception e) {
-                    System.out.println("Ligne ignorée : " + ligne);
-                    System.out.println("Erreur : " + e.getMessage());
-                }
+    
+    /**
+     * Niveau 1 : Complète les valeurs manquantes du CSV (Abdomen, Foie, Viscères, Autres, Total)
+     * par la moyenne de chaque colonne
+     */
+    private void completDonneesManquantesCSV() {
+        // Calculer les moyennes
+        Double moyenneAbdomen = calculerMoyenne(getValides(d -> d.getAbdomen()));
+        Double moyenneFoie = calculerMoyenne(getValides(d -> d.getFoie()));
+        Double moyenneVisceres = calculerMoyenne(getValides(d -> d.getVisceres()));
+        Double moyenneAutres = calculerMoyenne(getValides(d -> d.getAutres()));
+        Double moyenneTotal = calculerMoyenne(getValides(d -> d.getTotal()));
+        
+        System.out.println("=== MOYENNES CALCULÉES (Niveau 1) ===");
+        System.out.println("Abdomen: " + moyenneAbdomen);
+        System.out.println("Foie: " + moyenneFoie);
+        System.out.println("Viscères: " + moyenneVisceres);
+        System.out.println("Autres: " + moyenneAutres);
+        System.out.println("Total: " + moyenneTotal);
+        System.out.println();
+        
+        // Remplacer les valeurs manquantes ou négatives
+        for (Data_B d : data) {
+            if (d.getAbdomen() == null || d.getAbdomen() < 0) {
+                d.setAbdomen(moyenneAbdomen.intValue());
+                System.out.println("Complétion abdomen pour ID " + d.getId());
+            }
+            if (d.getFoie() == null || d.getFoie() < 0) {
+                d.setFoie(moyenneFoie.intValue());
+                System.out.println("Complétion foie pour ID " + d.getId());
+            }
+            if (d.getVisceres() == null || d.getVisceres() < 0) {
+                d.setVisceres(moyenneVisceres.intValue());
+                System.out.println("Complétion viscères pour ID " + d.getId());
+            }
+            if (d.getAutres() == null || d.getAutres() < 0) {
+                d.setAutres(moyenneAutres.intValue());
+                System.out.println("Complétion autres pour ID " + d.getId());
+            }
+            if (d.getTotal() == null || d.getTotal() < 0) {
+                d.setTotal(moyenneTotal.intValue());
+                System.out.println("Complétion total pour ID " + d.getId());
             }
         }
-
-    } catch (IOException e) {
-        System.out.println("Erreur lecture fichier : " + e.getMessage());
     }
-}
-
-// ✅ Méthode utilitaire : gère virgule et valeur vide
-private Double parseDouble(String val) {
-    if (val == null || val.trim().isEmpty()) return null;
-    return Double.parseDouble(val.trim().replace(",", "."));
-}
-
+    
+    /**
+     * Récupère les valeurs valides (>0) d'une colonne
+     */
+    private List<Integer> getValides(java.util.function.Function<Data_B, Integer> extractor) {
+        List<Integer> valides = new ArrayList<>();
+        for (Data_B d : data) {
+            Integer valeur = extractor.apply(d);
+            if (valeur != null && valeur >= 0) {
+                valides.add(valeur);
+            }
+        }
+        return valides;
+    }
+    
+    private Double calculerMoyenne(List<Integer> valeurs) {
+        if (valeurs.isEmpty()) return 0.0;
+        double somme = 0;
+        for (Integer v : valeurs) {
+            somme += v;
+        }
+        return somme / valeurs.size();
+    }
+    
+    public void afficherResultats() {
+        System.out.println("\n=== DONNÉES APRÈS COMPLÉTION (Niveau 1) ===");
+        for (Data_B d : data) {
+            System.out.println(d);
+        }
+        
+        System.out.println("\n=== STATISTIQUES POPULATION (Niveau 2) ===");
+        System.out.println(population);
+        
+        System.out.println("\n=== DÉTAIL DES POISSONS APRÈS COMPLÉTION POPULATION ===");
+        for (Poisson p : poissons) {
+            System.out.printf("ID: %s | Longueur: %.1f mm | Taux infestation: %.2f parasites\n",
+                p.getId(), p.getLongueur(), p.getTauxInfestation());
+        }
+    }
+    
+    public static void main(String[] args) {
+        try {
+            Application app = new Application();
+            app.initData("src/nouveau_fichier.csv");
+            app.afficherResultats();
+            
+        } catch (Exception e) {
+        //    System.out.println("Erreur : " + e.getMessage());
+      //      e.printStackTrace();
+    //    }
+  //  }
+//}
 
 */
